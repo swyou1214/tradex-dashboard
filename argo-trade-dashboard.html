@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TradeX — AI Confidence Trading Dashboard</title>
+<style>
+  :root{
+    --bg:#0A0D13;
+    --panel:#10141C;
+    --panel-2:#151A24;
+    --border:#232A38;
+    --border-soft:#1B212C;
+    --text:#E7EAF0;
+    --text-dim:#8890A0;
+    --text-faint:#565E6E;
+    --cyan:#4FD9E8;
+    --cyan-dim:#2A6E76;
+    --amber:#F0A83C;
+    --amber-dim:#8A6427;
+    --green:#3FCB86;
+    --green-dim:#1F6E48;
+    --red:#E8615C;
+    --red-dim:#7E322F;
+    --mono:'IBM Plex Mono','SF Mono','Consolas',monospace;
+    --sans:'Inter',-apple-system,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    padding:20px;
+    min-height:100vh;
+  }
+  .wrap{max-width:1240px;margin:0 auto;}
+
+  /* ===== HEADER ===== */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 18px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:6px;
+    margin-bottom:12px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    width:34px;height:34px;border:1px solid var(--cyan-dim);border-radius:4px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);color:var(--cyan);font-size:13px;font-weight:600;
+    background:rgba(79,217,232,0.06);
+  }
+  .brand-text .name{font-size:14px;font-weight:600;letter-spacing:0.04em;}
+  .brand-text .sub{font-size:11px;color:var(--text-faint);font-family:var(--mono);letter-spacing:0.03em;}
+
+  .ticker-block{display:flex;align-items:baseline;gap:14px;}
+  .ticker-sym{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:0.02em;}
+  .ticker-price{font-family:var(--mono);font-size:26px;font-weight:600;}
+  .ticker-chg{font-family:var(--mono);font-size:13px;font-weight:600;}
+  .up{color:var(--green);}
+  .down{color:var(--red);}
+
+  .status-block{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:11px;color:var(--text-dim);}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;
+    box-shadow:0 0 5px var(--green);}
+  .clock{color:var(--text-dim);}
+
+  /* ===== MAIN GRID ===== */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:12px;
+  }
+  .col-left{display:flex;flex-direction:column;gap:12px;}
+  .col-right{display:flex;flex-direction:column;gap:12px;}
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:14px 16px;
+  }
+  .panel-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .panel-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--text-dim);font-weight:600;
+  }
+  .panel-meta{font-family:var(--mono);font-size:11px;color:var(--text-faint);}
+
+  /* ===== CHART ===== */
+  .chart-panel{height:360px;display:flex;flex-direction:column;}
+  #chart{flex:1;width:100%;}
+  .chart-legend{display:flex;gap:16px;font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-top:8px;}
+  .legend-item{display:flex;align-items:center;gap:6px;}
+  .legend-swatch{width:10px;height:2px;display:inline-block;}
+
+  .tf-row{display:flex;gap:4px;}
+  .tf-btn{
+    font-family:var(--mono);font-size:11px;color:var(--text-dim);
+    background:transparent;border:1px solid var(--border-soft);border-radius:3px;
+    padding:3px 9px;cursor:pointer;
+  }
+  .tf-btn.active{color:var(--cyan);border-color:var(--cyan-dim);background:rgba(79,217,232,0.06);}
+
+  /* ===== SIGNAL BREAKDOWN ===== */
+  .signal-row{
+    display:flex;align-items:center;gap:10px;padding:8px 0;
+    border-bottom:1px solid var(--border-soft);
+  }
+  .signal-row:last-child{border-bottom:none;}
+  .signal-label{flex:0 0 92px;font-size:12px;color:var(--text-dim);}
+  .signal-bar-track{flex:1;height:5px;background:var(--border-soft);border-radius:3px;overflow:hidden;}
+  .signal-bar-fill{height:100%;border-radius:3px;}
+  .signal-val{flex:0 0 34px;text-align:right;font-family:var(--mono);font-size:11px;color:var(--text-dim);}
+
+  /* ===== CONFIDENCE GAUGE ===== */
+  .gauge-panel{display:flex;flex-direction:column;align-items:center;padding-top:10px;}
+  .horizon-wrap{
+    width:100%;height:64px;position:relative;margin-bottom:2px;
+    border:1px solid var(--border-soft);border-radius:5px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(63,203,134,0.06) 0%, transparent 50%, rgba(232,97,92,0.06) 100%);
+  }
+  .horizon-mid{
+    position:absolute;left:0;right:0;top:50%;height:1px;background:var(--border-soft);
+  }
+  .horizon-label{
+    position:absolute;font-family:var(--mono);font-size:9px;color:var(--text-faint);
+    left:6px;letter-spacing:0.04em;
+  }
+  .gauge-wrap{position:relative;width:220px;height:130px;}
+  .gauge-readout{position:absolute;bottom:0;left:0;right:0;text-align:center;}
+  .gauge-score{font-family:var(--mono);font-size:38px;font-weight:600;line-height:1;}
+  .gauge-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-faint);margin-top:4px;}
+  .verdict{
+    margin-top:14px;width:100%;
+    text-align:center;padding:10px 8px;border-radius:5px;
+    font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.03em;
+  }
+  .verdict-sub{font-size:10px;font-weight:400;color:var(--text-dim);margin-top:3px;letter-spacing:0.02em;}
+
+  /* ===== POSITION / ORDER ===== */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .stat{background:var(--panel-2);border-radius:5px;padding:10px 12px;}
+  .stat-label{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;}
+  .stat-val{font-family:var(--mono);font-size:15px;font-weight:600;}
+
+  .action-row{display:flex;gap:8px;margin-top:12px;}
+  .action-btn{
+    flex:1;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:0.03em;
+    padding:9px 0;border-radius:5px;text-align:center;cursor:pointer;border:1px solid;
+  }
+  .btn-long{color:var(--green);border-color:var(--green-dim);background:rgba(63,203,134,0.07);}
+  .btn-short{color:var(--red);border-color:var(--red-dim);background:rgba(232,97,92,0.07);}
+  .btn-flat{color:var(--text-dim);border-color:var(--border-soft);background:transparent;flex:0 0 60px;}
+
+  /* ===== WATCHLIST ===== */
+  .watch-row{
+    display:grid;grid-template-columns:70px 1fr 70px 60px;
+    align-items:center;gap:6px;padding:8px 0;
+    border-bottom:1px solid var(--border-soft);font-size:12px;
+  }
+  .watch-row:last-child{border-bottom:none;}
+  .watch-sym{font-family:var(--mono);font-weight:600;}
+  .watch-conf-track{height:4px;background:var(--border-soft);border-radius:2px;overflow:hidden;}
+  .watch-conf-fill{height:100%;border-radius:2px;}
+  .watch-price{font-family:var(--mono);text-align:right;}
+  .watch-chg{font-family:var(--mono);text-align:right;font-size:11px;}
+
+  .footnote{
+    font-size:10.5px;color:var(--text-faint);text-align:center;padding:10px 4px 2px;
+    font-family:var(--mono);line-height:1.6;
+  }
+
+  @media (max-width:860px){
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">AI</div>
+      <div class="brand-text">
+        <div class="name">TRADEX</div>
+        <div class="sub">TRADE ASSIST · PROTOTYPE</div>
+      </div>
+    </div>
+    <div class="ticker-block">
+      <span class="ticker-sym">NVDA</span>
+      <span class="ticker-price" id="price">184.62</span>
+      <span class="ticker-chg up" id="chg">+2.14 (+1.17%)</span>
+    </div>
+    <div class="status-block">
+      <span><span class="dot"></span>LIVE (SIM)</span>
+      <span class="clock" id="clock">--:--:--</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="col-left">
+
+      <div class="panel chart-panel">
+        <div class="panel-head">
+          <span class="panel-title">Price · NVDA</span>
+          <div class="tf-row">
+            <div class="tf-btn">1D</div>
+            <div class="tf-btn active">4H</div>
+            <div class="tf-btn">1H</div>
+            <div class="tf-btn">15M</div>
+          </div>
+        </div>
+        <canvas id="chart"></canvas>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--cyan)"></span>Price</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--amber)"></span>20 EMA</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:var(--text-faint)"></span>AI entry zone</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Signal breakdown</span>
+          <span class="panel-meta">weighted composite</span>
+        </div>
+        <div id="signals"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Watchlist</span>
+          <span class="panel-meta">confidence-ranked</span>
+        </div>
+        <div style="display:grid;grid-template-columns:70px 1fr 70px 60px;gap:6px;font-size:10px;color:var(--text-faint);padding-bottom:6px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:0.05em;">
+          <span>Symbol</span><span>AI confidence</span><span style="text-align:right">Price</span><span style="text-align:right">Chg</span>
+        </div>
+        <div id="watchlist"></div>
+      </div>
+
+    </div>
+
+    <div class="col-right">
+
+      <div class="panel gauge-panel">
+        <div class="panel-title" style="align-self:flex-start;">AI confidence</div>
+        <div class="horizon-wrap">
+          <div class="horizon-mid"></div>
+          <span class="horizon-label" style="top:4px;">climb</span>
+          <span class="horizon-label" style="bottom:4px;">descend</span>
+          <svg id="planeSvg" width="100%" height="64" viewBox="0 0 280 64" style="position:absolute;top:0;left:0;overflow:visible;"></svg>
+        </div>
+        <div class="gauge-wrap">
+          <svg id="gaugeSvg" width="220" height="130" viewBox="0 0 220 130"></svg>
+        </div>
+        <div class="verdict" id="verdict">
+          LEAN LONG
+          <div class="verdict-sub" id="verdictSub">Momentum + volume agree, sentiment neutral</div>
+        </div>
+        <div class="action-row">
+          <div class="action-btn btn-long">LONG</div>
+          <div class="action-btn btn-flat">FLAT</div>
+          <div class="action-btn btn-short">SHORT</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:10px;">Position sizing</div>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-label">Suggested size</div><div class="stat-val">1.8% NAV</div></div>
+          <div class="stat"><div class="stat-label">Risk/reward</div><div class="stat-val">1 : 2.4</div></div>
+          <div class="stat"><div class="stat-label">Stop</div><div class="stat-val" style="color:var(--red)">178.90</div></div>
+          <div class="stat"><div class="stat-label">Target</div><div class="stat-val" style="color:var(--green)">198.40</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:10px;">Model notes</div>
+        <div style="font-size:12px;color:var(--text-dim);line-height:1.6;">
+          Composite score built from 4 independent factor models. No single factor drives the call — confidence drops automatically when factors disagree. This is a decision-support signal, not an auto-executed order.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footnote">SIMULATED DATA · NOT FINANCIAL ADVICE · PROTOTYPE FOR PORTFOLIO / DEV USE ONLY</div>
+</div>
+
+<script>
+function clock(){
+  const d = new Date();
+  document.getElementById('clock').textContent = d.toTimeString().slice(0,8);
+}
+clock(); setInterval(clock, 1000);
+
+/* ---------- price series (mock) ---------- */
+let series = [];
+let base = 184.62;
+(function seed(){
+  let p = 172;
+  for(let i=0;i<90;i++){
+    p += (Math.random()-0.48) * 1.4;
+    series.push(p);
+  }
+  base = series[series.length-1];
+})();
+
+function ema(arr, period){
+  const k = 2/(period+1);
+  let out = [arr[0]];
+  for(let i=1;i<arr.length;i++) out.push(arr[i]*k + out[i-1]*(1-k));
+  return out;
+}
+
+function drawChart(){
+  const canvas = document.getElementById('chart');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+
+  const pad = {t:10,r:8,b:8,l:8};
+  const min = Math.min(...series), max = Math.max(...series);
+  const range = (max-min) || 1;
+  const x = i => pad.l + (i/(series.length-1)) * (w-pad.l-pad.r);
+  const y = v => pad.t + (1 - (v-min)/range) * (h-pad.t-pad.b);
+
+  ctx.strokeStyle = '#1B212C';
+  ctx.lineWidth = 1;
+  for(let i=0;i<=4;i++){
+    const gy = pad.t + i*(h-pad.t-pad.b)/4;
+    ctx.beginPath(); ctx.moveTo(pad.l,gy); ctx.lineTo(w-pad.r,gy); ctx.stroke();
+  }
+
+  const entryLow = min + range*0.38, entryHigh = min + range*0.52;
+  ctx.fillStyle = 'rgba(86,94,110,0.10)';
+  ctx.fillRect(pad.l, y(entryHigh), w-pad.l-pad.r, y(entryLow)-y(entryHigh));
+
+  const emaSeries = ema(series, 20);
+  ctx.strokeStyle = '#F0A83C';
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  emaSeries.forEach((v,i)=>{ i===0 ? ctx.moveTo(x(i),y(v)) : ctx.lineTo(x(i),y(v)); });
+  ctx.stroke();
+
+  ctx.strokeStyle = '#4FD9E8';
+  ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  series.forEach((v,i)=>{ i===0 ? ctx.moveTo(x(i),y(v)) : ctx.lineTo(x(i),y(v)); });
+  ctx.stroke();
+
+  const grad = ctx.createLinearGradient(0,pad.t,0,h-pad.b);
+  grad.addColorStop(0,'rgba(79,217,232,0.16)');
+  grad.addColorStop(1,'rgba(79,217,232,0)');
+  ctx.lineTo(x(series.length-1), h-pad.b);
+  ctx.lineTo(x(0), h-pad.b);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  const lastX = x(series.length-1), lastY = y(series[series.length-1]);
+  ctx.fillStyle = '#4FD9E8';
+  ctx.beginPath(); ctx.arc(lastX,lastY,3,0,Math.PI*2); ctx.fill();
+}
+
+/* ---------- signals ---------- */
+const signalDefs = [
+  {label:'Momentum', val: 74, color:'var(--green)'},
+  {label:'Volume', val: 61, color:'var(--green)'},
+  {label:'Volatility', val: 44, color:'var(--amber)'},
+  {label:'Sentiment', val: 52, color:'var(--amber)'},
+  {label:'Mean reversion', val: 28, color:'var(--red)'},
+];
+function renderSignals(){
+  const el = document.getElementById('signals');
+  el.innerHTML = signalDefs.map(s => `
+    <div class="signal-row">
+      <span class="signal-label">${s.label}</span>
+      <div class="signal-bar-track"><div class="signal-bar-fill" style="width:${s.val}%;background:${s.color}"></div></div>
+      <span class="signal-val">${s.val}</span>
+    </div>
+  `).join('');
+}
+renderSignals();
+
+/* ---------- watchlist ---------- */
+const watchlist = [
+  {sym:'NVDA', conf:71, price:184.62, chg:1.17},
+  {sym:'AVGO', conf:64, price:212.40, chg:0.52},
+  {sym:'ARM', conf:58, price:151.30, chg:-0.31},
+  {sym:'SMCI', conf:39, price:44.85, chg:-1.84},
+  {sym:'TSM', conf:68, price:198.10, chg:0.94},
+];
+function confColor(c){
+  if(c>=65) return 'var(--green)';
+  if(c>=45) return 'var(--amber)';
+  return 'var(--red)';
+}
+function renderWatchlist(){
+  const el = document.getElementById('watchlist');
+  el.innerHTML = watchlist.map(w => `
+    <div class="watch-row">
+      <span class="watch-sym">${w.sym}</span>
+      <div class="watch-conf-track"><div class="watch-conf-fill" style="width:${w.conf}%;background:${confColor(w.conf)}"></div></div>
+      <span class="watch-price">${w.price.toFixed(2)}</span>
+      <span class="watch-chg ${w.chg>=0?'up':'down'}">${w.chg>=0?'+':''}${w.chg.toFixed(2)}%</span>
+    </div>
+  `).join('');
+}
+renderWatchlist();
+
+/* ---------- gauge (attitude-indicator style arc) ---------- */
+let confidence = 71;
+function drawGauge(score){
+  const svg = document.getElementById('gaugeSvg');
+  const cx=110, cy=115, r=90;
+  const startAngle = Math.PI, endAngle = 0;
+  const angle = startAngle + (score/100)*(endAngle-startAngle);
+  const needleX = cx + r*0.78*Math.cos(angle);
+  const needleY = cy - r*0.78*Math.sin(angle);
+
+  function arcPath(a0,a1,rad){
+    const x0 = cx+rad*Math.cos(a0), y0 = cy-rad*Math.sin(a0);
+    const x1 = cx+rad*Math.cos(a1), y1 = cy-rad*Math.sin(a1);
+    return `M${x0},${y0} A${rad},${rad} 0 0 1 ${x1},${y1}`;
+  }
+
+  const segs = [
+    {a0:Math.PI, a1:Math.PI*0.66, color:'#7E322F'},
+    {a0:Math.PI*0.66, a1:Math.PI*0.34, color:'#8A6427'},
+    {a0:Math.PI*0.34, a1:0, color:'#1F6E48'},
+  ];
+
+  let html = '';
+  segs.forEach(s=>{
+    html += `<path d="${arcPath(s.a0,s.a1,r)}" stroke="${s.color}" stroke-width="10" fill="none" stroke-linecap="butt"/>`;
+  });
+  html += `<path d="${arcPath(Math.PI,0,r+13)}" stroke="#1B212C" stroke-width="1" fill="none"/>`;
+
+  html += `<line x1="${cx}" y1="${cy}" x2="${needleX}" y2="${needleY}" stroke="#E7EAF0" stroke-width="2.5" stroke-linecap="round"/>`;
+  html += `<circle cx="${cx}" cy="${cy}" r="4.5" fill="#E7EAF0"/>`;
+
+  svg.innerHTML = html;
+
+  document.getElementById('gaugeSvg').insertAdjacentHTML('afterend', '');
+  const wrap = document.querySelector('.gauge-readout');
+}
+
+function updateGaugeReadout(score){
+  let wrap = document.querySelector('.gauge-readout');
+  if(!wrap){
+    wrap = document.createElement('div');
+    wrap.className = 'gauge-readout';
+    document.querySelector('.gauge-wrap').appendChild(wrap);
+  }
+  const color = score>=65 ? 'var(--green)' : score>=45 ? 'var(--amber)' : 'var(--red)';
+  wrap.innerHTML = `<div class="gauge-score" style="color:${color}">${score}</div><div class="gauge-label">confidence / 100</div>`;
+}
+
+function updateVerdict(score){
+  const v = document.getElementById('verdict');
+  const sub = document.getElementById('verdictSub');
+  let text, subtext, bg, color;
+  if(score>=65){ text='LEAN LONG'; subtext='Momentum + volume agree, sentiment neutral'; bg='rgba(63,203,134,0.09)'; color='var(--green)'; }
+  else if(score>=45){ text='NEUTRAL'; subtext='Signals disagree — confidence held back'; bg='rgba(240,168,60,0.09)'; color='var(--amber)'; }
+  else { text='LEAN SHORT'; subtext='Downside factors dominate composite'; bg='rgba(232,97,92,0.09)'; color='var(--red)'; }
+  v.style.background = bg; v.style.color = color; v.style.border = `1px solid ${color}`;
+  v.childNodes[0].textContent = text;
+  sub.textContent = subtext;
+}
+
+/* ---------- plane climb/descend indicator ---------- */
+function drawPlane(score){
+  const svg = document.getElementById('planeSvg');
+  const w = 280, h = 64, midY = h/2;
+  const t = performance.now()/1000;
+  const bob = Math.sin(t*1.6) * 1.5;
+
+  const delta = score - 50;
+  const y = midY - (delta/50) * (midY-10) + bob;
+  const pitch = -(delta/50) * 22;
+
+  const nose = 'rgba(231,234,240,1)';
+  const wing = '#4FD9E8';
+
+  const plane = `
+    <g transform="translate(${w/2}, ${y}) rotate(${pitch})">
+      <path d="M -22 3 L -4 3 L 6 -2 L 8 -1 L 0 5 L 14 6 L 14 8 L -2 9 L -8 13 L -13 13 L -9 8 L -22 8 Z" fill="${nose}"/>
+      <path d="M -4 3 L -10 -7 L -6 -7 L 2 2 Z" fill="${wing}" opacity="0.85"/>
+      <path d="M 0 5 L -3 12 L 0 12 L 3 8 Z" fill="${wing}" opacity="0.85"/>
+      <circle cx="14" cy="7" r="1.4" fill="${wing}"/>
+    </g>
+  `;
+
+  const trailColor = delta>4 ? '#3FCB86' : delta<-4 ? '#E8615C' : '#F0A83C';
+  const dashes = [];
+  for(let i=0;i<8;i++){
+    const dx = (w/2) - 30 - i*16;
+    if(dx < 4) break;
+    const dy = midY - ((delta/50) * (midY-10)) * (i/9);
+    dashes.push(`<circle cx="${dx}" cy="${dy}" r="1.1" fill="${trailColor}" opacity="${0.5 - i*0.05}"/>`);
+  }
+
+  svg.innerHTML = dashes.join('') + plane;
+}
+let planeRAF;
+function animatePlane(){
+  drawPlane(confidence);
+  planeRAF = requestAnimationFrame(animatePlane);
+}
+animatePlane();
+
+drawGauge(confidence);
+updateGaugeReadout(confidence);
+updateVerdict(confidence);
+drawChart();
+
+/* ---------- simulate live ticks ---------- */
+setInterval(()=>{
+  const drift = (Math.random()-0.5) * 0.9;
+  base += drift;
+  series.push(base);
+  if(series.length>90) series.shift();
+  drawChart();
+
+  document.getElementById('price').textContent = base.toFixed(2);
+  const chgEl = document.getElementById('chg');
+  const chgPct = ((base-182.48)/182.48*100);
+  chgEl.textContent = `${chgPct>=0?'+':''}${(base-182.48).toFixed(2)} (${chgPct>=0?'+':''}${chgPct.toFixed(2)}%)`;
+  chgEl.className = 'ticker-chg ' + (chgPct>=0?'up':'down');
+
+  confidence = Math.max(5, Math.min(95, confidence + (Math.random()-0.5)*4));
+  const rounded = Math.round(confidence);
+  drawGauge(rounded);
+  updateGaugeReadout(rounded);
+  updateVerdict(rounded);
+
+  signalDefs.forEach(s=>{ s.val = Math.max(5, Math.min(95, s.val + (Math.random()-0.5)*6)); s.val = Math.round(s.val); });
+  renderSignals();
+}, 2200);
+
+window.addEventListener('resize', drawChart);
+</script>
+</body>
+</html>
