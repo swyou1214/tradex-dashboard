@@ -103,6 +103,101 @@
   .cal-cell.today{border-color:var(--cyan-dim);}
   .cal-cell.today .cal-day{color:var(--cyan);font-weight:600;}
 
+  /* ===== MONTHLY RETURNS HEATMAP ===== */
+  .heat-table{width:100%;border-collapse:separate;border-spacing:3px;font-family:var(--mono);font-size:11px;table-layout:fixed;}
+  .heat-table th{
+    font-size:10px;color:var(--text-faint);font-weight:600;letter-spacing:0.04em;
+    padding:4px 2px;text-align:center;text-transform:uppercase;
+  }
+  .heat-table th:first-child{width:52px;}
+  .heat-year{color:var(--text-dim);text-align:center;font-weight:600;}
+  .heat-cell{
+    text-align:center;padding:7px 2px;border-radius:3px;font-weight:600;
+  }
+  .h-pos{color:var(--green);background:rgba(63,203,134,0.12);}
+  .h-pos-strong{color:var(--green);background:rgba(63,203,134,0.26);}
+  .h-neg{color:var(--red);background:rgba(232,97,92,0.12);}
+  .h-neg-strong{color:var(--red);background:rgba(232,97,92,0.26);}
+  .h-flat{color:var(--text-dim);background:var(--panel-2);}
+  .h-agg{color:var(--text-dim);background:var(--panel-2);font-weight:600;}
+
+  /* ===== PORTFOLIO ===== */
+  .pf-grid{display:grid;grid-template-columns:320px 1fr;gap:12px;margin-bottom:12px;}
+  .donut-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .donut-legend{width:100%;display:flex;flex-direction:column;gap:6px;}
+  .dl-row{display:flex;align-items:center;gap:8px;font-size:12px;}
+  .dl-swatch{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+  .dl-name{color:var(--text-dim);flex:1;}
+  .dl-val{font-family:var(--mono);color:var(--text);font-weight:600;}
+
+  .risk-item{
+    display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-soft);
+    font-size:12px;line-height:1.55;
+  }
+  .risk-item:last-child{border-bottom:none;}
+  .risk-flag{
+    flex-shrink:0;width:56px;text-align:center;font-family:var(--mono);font-size:9px;
+    font-weight:600;letter-spacing:0.05em;padding:3px 0;border-radius:3px;height:fit-content;margin-top:2px;
+  }
+  .rf-high{color:var(--red);background:rgba(232,97,92,0.1);border:1px solid var(--red-dim);}
+  .rf-med{color:var(--amber);background:rgba(240,168,60,0.1);border:1px solid var(--amber-dim);}
+  .rf-low{color:var(--green);background:rgba(63,203,134,0.1);border:1px solid var(--green-dim);}
+  .risk-body{color:var(--text-dim);}
+  .risk-body strong{color:var(--text);font-weight:600;}
+
+  .hold-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .hold-table th{
+    text-align:right;font-size:10px;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--text-faint);padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600;
+  }
+  .hold-table th:first-child,.hold-table td:first-child{text-align:left;}
+  .hold-table td{
+    padding:9px 10px;border-bottom:1px solid var(--border-soft);
+    font-family:var(--mono);color:var(--text-dim);text-align:right;
+  }
+  .hold-table td:first-child{color:var(--text);font-weight:600;}
+  .alloc-bar{display:inline-block;height:4px;border-radius:2px;background:var(--cyan);vertical-align:middle;margin-right:6px;}
+
+  /* ===== POSITION TRACKER ===== */
+  .tracker-form{
+    display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr 1fr auto;gap:8px;
+    margin-bottom:14px;align-items:end;
+  }
+  .tf-field label{
+    display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--text-faint);margin-bottom:4px;font-family:var(--mono);
+  }
+  .tf-field input{
+    width:100%;background:var(--panel-2);border:1px solid var(--border-soft);
+    border-radius:4px;color:var(--text);font-family:var(--mono);font-size:12px;
+    padding:7px 9px;outline:none;
+  }
+  .tf-field input:focus{border-color:var(--cyan-dim);}
+  .add-btn{
+    font-family:var(--mono);font-size:12px;font-weight:600;color:var(--cyan);
+    background:rgba(79,217,232,0.06);border:1px solid var(--cyan-dim);border-radius:4px;
+    padding:8px 16px;cursor:pointer;height:fit-content;
+  }
+  .add-btn:hover{background:rgba(79,217,232,0.12);}
+
+  .sig{
+    display:inline-block;padding:2px 9px;border-radius:3px;font-size:10px;
+    font-family:var(--mono);font-weight:600;letter-spacing:0.04em;
+  }
+  .sig-hold{color:var(--green);background:rgba(63,203,134,0.1);border:1px solid var(--green-dim);}
+  .sig-trim{color:var(--amber);background:rgba(240,168,60,0.1);border:1px solid var(--amber-dim);}
+  .sig-sell{color:var(--red);background:rgba(232,97,92,0.1);border:1px solid var(--red-dim);}
+  .sig-review{color:var(--text-dim);background:var(--panel-2);border:1px solid var(--border-soft);}
+  .del-btn{
+    color:var(--text-faint);cursor:pointer;font-family:var(--mono);font-size:11px;
+    background:none;border:none;padding:2px 6px;
+  }
+  .del-btn:hover{color:var(--red);}
+  .track-reason{font-size:10.5px;color:var(--text-faint);font-family:var(--sans);line-height:1.4;}
+  .empty-state{
+    text-align:center;padding:24px 0;color:var(--text-faint);font-size:12px;font-family:var(--mono);
+  }
+
   /* ===== HEADER ===== */
   header{
     display:flex;
@@ -274,6 +369,7 @@
 
   <nav>
     <div class="nav-tab active" data-view="home">Home</div>
+    <div class="nav-tab" data-view="portfolio">Portfolio</div>
     <div class="nav-tab" data-view="reports">Reports</div>
     <div class="nav-tab" data-view="calendar">Calendar</div>
   </nav>
@@ -370,6 +466,74 @@
   </div>
   </div>
 
+  <div class="view" id="view-portfolio">
+    <div class="panel" style="margin-bottom:12px;">
+      <div class="panel-head">
+        <span class="panel-title">Net worth</span>
+        <span class="panel-meta">simulated account</span>
+      </div>
+      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat"><div class="stat-label">Total value</div><div class="stat-val">£48,230</div></div>
+        <div class="stat"><div class="stat-label">Today</div><div class="stat-val" style="color:var(--green)">+£412 (+0.86%)</div></div>
+        <div class="stat"><div class="stat-label">Unrealized P&L</div><div class="stat-val" style="color:var(--green)">+£3,180</div></div>
+        <div class="stat"><div class="stat-label">Idle cash</div><div class="stat-val" style="color:var(--amber)">£6,400</div></div>
+      </div>
+    </div>
+
+    <div class="pf-grid">
+      <div class="panel donut-wrap">
+        <div class="panel-title" style="align-self:flex-start;">Allocation</div>
+        <svg id="donutSvg" width="180" height="180" viewBox="0 0 180 180"></svg>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">AI portfolio insights</span>
+          <span class="panel-meta">risk engine · simulated</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-flag rf-high">HIGH</span>
+          <span class="risk-body"><strong>Concentration risk.</strong> NVDA, AVGO and TSM are 58% of equity value and move on the same AI-semiconductor theme. A sector drawdown hits all three at once — effective diversification is lower than the holding count suggests.</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-flag rf-med">MED</span>
+          <span class="risk-body"><strong>Idle cash drag.</strong> £6,400 (13% of account) is earning nothing. At current money-market rates that's roughly £300/yr of forgone yield.</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-flag rf-med">MED</span>
+          <span class="risk-body"><strong>Event exposure.</strong> NVDA earnings on 22 July: 34% of the portfolio reports within a single week. Consider whether current position sizing matches your risk tolerance through the print.</span>
+        </div>
+        <div class="risk-item">
+          <span class="risk-flag rf-low">LOW</span>
+          <span class="risk-body"><strong>Currency exposure.</strong> 81% of holdings are USD-denominated against a GBP base. GBP/USD volatility is currently subdued; monitoring only.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Position tracker</span>
+        <span class="panel-meta">saved in your browser</span>
+      </div>
+      <div class="tracker-form">
+        <div class="tf-field"><label>Symbol</label><input id="pSym" placeholder="NVDA" maxlength="8"></div>
+        <div class="tf-field"><label>Entry price</label><input id="pEntry" type="number" step="0.01" placeholder="150.00"></div>
+        <div class="tf-field"><label>Quantity</label><input id="pQty" type="number" step="0.0001" placeholder="10"></div>
+        <div class="tf-field"><label>Entry date</label><input id="pDate" type="date"></div>
+        <div class="tf-field"><label>Current price</label><input id="pNow" type="number" step="0.01" placeholder="184.60"></div>
+        <button class="add-btn" id="pAdd">ADD</button>
+      </div>
+      <table class="hold-table" id="trackerTableWrap">
+        <thead>
+          <tr><th>Asset</th><th>Days held</th><th>Entry</th><th>Current</th><th>P&L</th><th>Signal</th><th style="text-align:left;padding-left:14px;">Analysis</th><th></th></tr>
+        </thead>
+        <tbody id="trackerBody"></tbody>
+      </table>
+      <div class="empty-state" id="trackerEmpty">No positions logged yet — add your first one above</div>
+    </div>
+  </div>
+
   <div class="view" id="view-reports">
     <div class="panel" style="margin-bottom:12px;">
       <div class="panel-head">
@@ -405,12 +569,21 @@
   </div>
 
   <div class="view" id="view-calendar">
-    <div class="panel">
+    <div class="panel" style="margin-bottom:12px;">
       <div class="panel-head">
         <span class="panel-title">Market calendar · July 2026</span>
         <span class="panel-meta">macro + earnings</span>
       </div>
       <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">BTC monthly returns (%)</span>
+        <span class="panel-meta">simulated · seasonality view</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="heat-table" id="heatTable"></table>
+      </div>
     </div>
   </div>
 
@@ -418,6 +591,170 @@
 </div>
 
 <script>
+/* ---------- position tracker ---------- */
+const LS_KEY = 'tradex_positions';
+let positions = [];
+try { positions = JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch(e){ positions = []; }
+
+function savePositions(){ localStorage.setItem(LS_KEY, JSON.stringify(positions)); }
+
+function daysHeld(dateStr){
+  const ms = Date.now() - new Date(dateStr + 'T00:00:00').getTime();
+  return Math.max(0, Math.floor(ms / 86400000));
+}
+
+function analyse(p){
+  const pnl = ((p.now - p.entry) / p.entry) * 100;
+  const days = daysHeld(p.date);
+
+  if(pnl <= -15) return {sig:'SELL', cls:'sig-sell',
+    reason:`Down ${Math.abs(pnl).toFixed(1)}% — beyond a typical stop-loss threshold. Holding further assumes a thesis change, not the original one.`};
+  if(pnl <= -8) return {sig:'REVIEW', cls:'sig-review',
+    reason:`Down ${Math.abs(pnl).toFixed(1)}% after ${days}d. Re-check the original thesis: if it's broken, exit; averaging down without a reason is how small losses become big ones.`};
+  if(pnl >= 25 && days >= 90) return {sig:'TRIM', cls:'sig-trim',
+    reason:`Up ${pnl.toFixed(1)}% over ${days}d — strong run. Consider taking partial profit to lock in gains while keeping upside exposure.`};
+  if(pnl >= 40) return {sig:'TRIM', cls:'sig-trim',
+    reason:`Up ${pnl.toFixed(1)}% — position has likely grown well past its intended weight. Rebalancing reduces single-name risk.`};
+  if(days >= 365 && pnl > 0) return {sig:'HOLD', cls:'sig-hold',
+    reason:`Held ${days}d and profitable. In many jurisdictions long-term holdings get better tax treatment — worth checking before selling.`};
+  if(pnl > 0 && pnl < 5 && days < 30) return {sig:'HOLD', cls:'sig-hold',
+    reason:`Early days (${days}d) and roughly flat. Too soon to judge — give the thesis time unless something fundamental changed.`};
+  if(pnl >= 5) return {sig:'HOLD', cls:'sig-hold',
+    reason:`Up ${pnl.toFixed(1)}% over ${days}d — steady, no exit trigger hit. Trailing stop below recent support would protect gains.`};
+  return {sig:'HOLD', cls:'sig-hold',
+    reason:`${pnl >= 0 ? 'Up' : 'Down'} ${Math.abs(pnl).toFixed(1)}% over ${days}d — within normal noise. No action signal.`};
+}
+
+function renderTracker(){
+  const body = document.getElementById('trackerBody');
+  const empty = document.getElementById('trackerEmpty');
+  const table = document.getElementById('trackerTableWrap');
+  if(positions.length === 0){
+    body.innerHTML = ''; empty.style.display = 'block'; table.style.display = 'none'; return;
+  }
+  empty.style.display = 'none'; table.style.display = 'table';
+  body.innerHTML = positions.map((p,i)=>{
+    const pnl = ((p.now - p.entry)/p.entry)*100;
+    const a = analyse(p);
+    const pnlColor = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text-dim)';
+    return `<tr>
+      <td>${p.sym}</td>
+      <td>${daysHeld(p.date)}d</td>
+      <td>${p.entry.toFixed(2)}</td>
+      <td>${p.now.toFixed(2)}</td>
+      <td style="color:${pnlColor}">${pnl>=0?'+':''}${pnl.toFixed(1)}%</td>
+      <td><span class="sig ${a.cls}">${a.sig}</span></td>
+      <td style="text-align:left;padding-left:14px;"><span class="track-reason">${a.reason}</span></td>
+      <td><button class="del-btn" data-del="${i}">✕</button></td>
+    </tr>`;
+  }).join('');
+  body.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      positions.splice(Number(btn.dataset.del), 1);
+      savePositions(); renderTracker();
+    });
+  });
+}
+
+document.getElementById('pAdd').addEventListener('click', ()=>{
+  const sym = document.getElementById('pSym').value.trim().toUpperCase();
+  const entry = parseFloat(document.getElementById('pEntry').value);
+  const qty = parseFloat(document.getElementById('pQty').value);
+  const date = document.getElementById('pDate').value;
+  const now = parseFloat(document.getElementById('pNow').value);
+  if(!sym || !entry || !qty || !date || !now){ return; }
+  positions.push({sym, entry, qty, date, now});
+  savePositions(); renderTracker();
+  ['pSym','pEntry','pQty','pNow'].forEach(id=>document.getElementById(id).value='');
+});
+
+renderTracker();
+
+/* ---------- portfolio donut ---------- */
+(function buildDonut(){
+  const alloc = [
+    {name:'Equities', val:57.8, color:'#4FD9E8'},
+    {name:'Crypto', val:14.8, color:'#F0A83C'},
+    {name:'ETFs', val:14.1, color:'#3FCB86'},
+    {name:'Cash', val:13.3, color:'#565E6E'},
+  ];
+  const cx=90, cy=90, r=64, stroke=22;
+  const C = 2*Math.PI*r;
+  let offset = 0;
+  let html = '';
+  alloc.forEach(a=>{
+    const frac = a.val/100;
+    html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${a.color}" stroke-width="${stroke}"
+      stroke-dasharray="${(frac*C).toFixed(1)} ${C.toFixed(1)}"
+      stroke-dashoffset="${(-offset*C).toFixed(1)}"
+      transform="rotate(-90 ${cx} ${cy})" opacity="0.85"/>`;
+    offset += frac;
+  });
+  html += `<text x="${cx}" y="${cy-4}" text-anchor="middle" fill="#E7EAF0" font-family="monospace" font-size="18" font-weight="600">£48.2k</text>`;
+  html += `<text x="${cx}" y="${cy+14}" text-anchor="middle" fill="#565E6E" font-family="monospace" font-size="9" letter-spacing="1">TOTAL</text>`;
+  document.getElementById('donutSvg').innerHTML = html;
+
+  document.getElementById('donutLegend').innerHTML = alloc.map(a=>`
+    <div class="dl-row">
+      <span class="dl-swatch" style="background:${a.color}"></span>
+      <span class="dl-name">${a.name}</span>
+      <span class="dl-val">${a.val}%</span>
+    </div>
+  `).join('');
+})();
+
+/* ---------- monthly returns heatmap ---------- */
+(function buildHeatmap(){
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const data = {
+    2026:[-10.17,-14.94,1.81,11.87,-3.41,-20.48,7.02,null,null,null,null,null],
+    2025:[9.29,-17.39,-2.3,14.08,10.99,2.49,8.13,-6.49,5.16,-3.69,-17.67,-2.97],
+    2024:[0.62,43.55,16.81,-14.76,11.07,-6.96,2.95,-8.6,7.29,10.76,37.29,-2.85],
+    2023:[39.63,0.03,22.96,2.81,-6.98,11.98,-4.02,-11.29,3.91,28.52,8.81,12.18],
+    2022:[-16.68,12.21,5.39,-17.3,-15.6,-37.28,16.8,-13.88,-3.12,5.56,-16.23,-3.59],
+    2021:[14.51,36.78,29.84,-1.98,-35.31,-5.95,18.19,13.8,-7.03,39.93,-7.11,-18.9],
+    2020:[29.95,-8.6,-24.92,34.26,9.51,-3.18,24.03,2.83,-7.51,27.7,42.95,46.92],
+  };
+
+  function cellClass(v){
+    if(v === null) return '';
+    if(v >= 15) return 'h-pos-strong';
+    if(v > 0) return 'h-pos';
+    if(v <= -15) return 'h-neg-strong';
+    if(v < 0) return 'h-neg';
+    return 'h-flat';
+  }
+  function fmt(v){ return v===null ? '' : (v>0?'+':'') + v.toFixed(2) + '%'; }
+
+  let html = '<tr><th>Year</th>' + months.map(m=>`<th>${m}</th>`).join('') + '</tr>';
+  const years = Object.keys(data).sort((a,b)=>b-a);
+  years.forEach(y=>{
+    html += `<tr><td class="heat-year">${y}</td>`;
+    data[y].forEach(v=>{
+      html += v===null ? '<td></td>' : `<td class="heat-cell ${cellClass(v)}">${fmt(v)}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  ['Average','Median'].forEach(stat=>{
+    html += `<tr><td class="heat-year">${stat}</td>`;
+    for(let m=0;m<12;m++){
+      const vals = years.map(y=>data[y][m]).filter(v=>v!==null);
+      let v;
+      if(stat==='Average'){ v = vals.reduce((a,b)=>a+b,0)/vals.length; }
+      else {
+        const s = [...vals].sort((a,b)=>a-b);
+        const mid = Math.floor(s.length/2);
+        v = s.length%2 ? s[mid] : (s[mid-1]+s[mid])/2;
+      }
+      html += `<td class="heat-cell h-agg">${fmt(Math.round(v*100)/100)}</td>`;
+    }
+    html += '</tr>';
+  });
+
+  document.getElementById('heatTable').innerHTML = html;
+})();
+
 /* ---------- greeting ---------- */
 (function greeting(){
   const name = 'Trade X';
