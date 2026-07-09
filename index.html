@@ -34,6 +34,75 @@
   }
   .wrap{max-width:1240px;margin:0 auto;}
 
+  /* ===== NAV ===== */
+  nav{
+    display:flex;align-items:center;gap:4px;
+    margin-bottom:12px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:6px;
+  }
+  .nav-tab{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.05em;
+    color:var(--text-dim);padding:8px 18px;border-radius:4px;
+    cursor:pointer;border:1px solid transparent;text-transform:uppercase;
+  }
+  .nav-tab:hover{color:var(--text);}
+  .nav-tab.active{
+    color:var(--cyan);border-color:var(--cyan-dim);
+    background:rgba(79,217,232,0.06);
+  }
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ===== GREETING ===== */
+  .greeting{
+    margin-bottom:12px;padding:0 2px;
+  }
+  .greeting-text{font-size:20px;font-weight:600;letter-spacing:0.01em;}
+  .greeting-sub{font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-top:3px;letter-spacing:0.03em;}
+
+  /* ===== REPORTS ===== */
+  .report-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .report-table th{
+    text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--text-faint);padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600;
+  }
+  .report-table td{
+    padding:9px 10px;border-bottom:1px solid var(--border-soft);
+    font-family:var(--mono);color:var(--text-dim);
+  }
+  .report-table td:first-child{color:var(--text);font-weight:600;}
+  .pill{
+    display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;
+    font-family:var(--mono);font-weight:600;letter-spacing:0.03em;
+  }
+  .pill-win{color:var(--green);background:rgba(63,203,134,0.1);border:1px solid var(--green-dim);}
+  .pill-loss{color:var(--red);background:rgba(232,97,92,0.1);border:1px solid var(--red-dim);}
+  .pill-open{color:var(--amber);background:rgba(240,168,60,0.1);border:1px solid var(--amber-dim);}
+
+  /* ===== CALENDAR ===== */
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-dow{
+    font-size:10px;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--text-faint);text-align:center;padding:6px 0;font-family:var(--mono);
+  }
+  .cal-cell{
+    min-height:64px;background:var(--panel-2);border-radius:4px;padding:6px 8px;
+    border:1px solid var(--border-soft);
+  }
+  .cal-cell.empty{background:transparent;border-color:transparent;}
+  .cal-day{font-family:var(--mono);font-size:11px;color:var(--text-faint);}
+  .cal-event{
+    margin-top:4px;font-size:10px;font-family:var(--mono);padding:2px 5px;border-radius:3px;
+    line-height:1.4;
+  }
+  .ev-macro{color:var(--amber);background:rgba(240,168,60,0.1);}
+  .ev-earn{color:var(--cyan);background:rgba(79,217,232,0.08);}
+  .cal-cell.today{border-color:var(--cyan-dim);}
+  .cal-cell.today .cal-day{color:var(--cyan);font-weight:600;}
+
   /* ===== HEADER ===== */
   header{
     display:flex;
@@ -203,6 +272,17 @@
     </div>
   </header>
 
+  <nav>
+    <div class="nav-tab active" data-view="home">Home</div>
+    <div class="nav-tab" data-view="reports">Reports</div>
+    <div class="nav-tab" data-view="calendar">Calendar</div>
+  </nav>
+
+  <div class="view active" id="view-home">
+  <div class="greeting">
+    <div class="greeting-text" id="greetingText">Good morning, Trade X</div>
+    <div class="greeting-sub" id="greetingSub"></div>
+  </div>
   <div class="grid">
     <div class="col-left">
 
@@ -288,11 +368,102 @@
 
     </div>
   </div>
+  </div>
+
+  <div class="view" id="view-reports">
+    <div class="panel" style="margin-bottom:12px;">
+      <div class="panel-head">
+        <span class="panel-title">Performance summary</span>
+        <span class="panel-meta">last 30 days · simulated</span>
+      </div>
+      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat"><div class="stat-label">Win rate</div><div class="stat-val" style="color:var(--green)">58%</div></div>
+        <div class="stat"><div class="stat-label">Total P&L</div><div class="stat-val" style="color:var(--green)">+4.2%</div></div>
+        <div class="stat"><div class="stat-label">Avg R:R</div><div class="stat-val">1 : 1.9</div></div>
+        <div class="stat"><div class="stat-label">AI signal accuracy</div><div class="stat-val" style="color:var(--cyan)">63%</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Trade log</span>
+        <span class="panel-meta">signal vs outcome</span>
+      </div>
+      <table class="report-table">
+        <thead>
+          <tr><th>Symbol</th><th>Date</th><th>Direction</th><th>AI conf.</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>NVDA</td><td>07-07</td><td>LONG</td><td>74</td><td>179.20</td><td>184.10</td><td style="color:var(--green)">+2.73%</td><td><span class="pill pill-win">WIN</span></td></tr>
+          <tr><td>TSM</td><td>07-03</td><td>LONG</td><td>68</td><td>194.55</td><td>197.80</td><td style="color:var(--green)">+1.67%</td><td><span class="pill pill-win">WIN</span></td></tr>
+          <tr><td>SMCI</td><td>07-01</td><td>SHORT</td><td>39</td><td>47.10</td><td>48.35</td><td style="color:var(--red)">-2.65%</td><td><span class="pill pill-loss">LOSS</span></td></tr>
+          <tr><td>ARM</td><td>06-27</td><td>LONG</td><td>61</td><td>148.90</td><td>152.40</td><td style="color:var(--green)">+2.35%</td><td><span class="pill pill-win">WIN</span></td></tr>
+          <tr><td>AVGO</td><td>06-25</td><td>LONG</td><td>64</td><td>210.10</td><td>—</td><td style="color:var(--amber)">+1.09%</td><td><span class="pill pill-open">OPEN</span></td></tr>
+          <tr><td>NVDA</td><td>06-20</td><td>SHORT</td><td>42</td><td>176.40</td><td>178.90</td><td style="color:var(--red)">-1.42%</td><td><span class="pill pill-loss">LOSS</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="view" id="view-calendar">
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Market calendar · July 2026</span>
+        <span class="panel-meta">macro + earnings</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
 
   <div class="footnote">SIMULATED DATA · NOT FINANCIAL ADVICE · PROTOTYPE FOR PORTFOLIO / DEV USE ONLY</div>
 </div>
 
 <script>
+/* ---------- greeting ---------- */
+(function greeting(){
+  const name = 'Trade X';
+  const h = new Date().getHours();
+  const word = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greetingText').textContent = `${word}, ${name}`;
+  const opts = {weekday:'long', day:'numeric', month:'long', year:'numeric'};
+  document.getElementById('greetingSub').textContent = new Date().toLocaleDateString('en-GB', opts).toUpperCase() + ' · MARKETS OPEN';
+})();
+
+/* ---------- nav tabs ---------- */
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('view-'+tab.dataset.view).classList.add('active');
+    if(tab.dataset.view==='home') drawChart();
+  });
+});
+
+/* ---------- calendar ---------- */
+(function buildCalendar(){
+  const grid = document.getElementById('calGrid');
+  const dows = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const events = {
+    2:{cls:'ev-macro',txt:'ISM Mfg PMI'},
+    3:{cls:'ev-macro',txt:'FOMC minutes'},
+    10:{cls:'ev-macro',txt:'CPI release'},
+    15:{cls:'ev-earn',txt:'TSM earnings'},
+    17:{cls:'ev-macro',txt:'Retail sales'},
+    22:{cls:'ev-earn',txt:'NVDA earnings'},
+    29:{cls:'ev-macro',txt:'FOMC decision'},
+    31:{cls:'ev-earn',txt:'AVGO earnings'},
+  };
+  let html = dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const firstDow = 2; /* July 1 2026 = Wednesday, index 2 in Mon-first week */
+  for(let i=0;i<firstDow;i++) html += `<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=31;d++){
+    const ev = events[d];
+    const today = d===9 ? ' today' : '';
+    html += `<div class="cal-cell${today}"><span class="cal-day">${d}</span>${ev?`<div class="cal-event ${ev.cls}">${ev.txt}</div>`:''}</div>`;
+  }
+  grid.innerHTML = html;
+})();
+
 function clock(){
   const d = new Date();
   document.getElementById('clock').textContent = d.toTimeString().slice(0,8);
