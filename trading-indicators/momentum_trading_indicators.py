@@ -1,11 +1,12 @@
 import pandas as pd
 import yfinance as yf
+import time
 
-def RSI_Calculator(stock, period = 14):
+def RSI_Calculator(stock, period=14):
     stock_data = yf.download(str(stock)) 
     
     if stock_data.empty:
-        print("The Stock " + str(stock) + "Doesn't Exist!")
+        print("The Stock " + str(stock) + " Doesn't Exist!")
         return
         
     else:
@@ -22,7 +23,9 @@ def RSI_Calculator(stock, period = 14):
         RS = avg_gain/avg_loss #Relative Strength
         RSI = 100 - (100/(1+RS))
         
+        del stock_data
         return RSI.item()
+    
 
 def MACD_Calculator():
     return    #WIP
@@ -30,5 +33,9 @@ def MACD_Calculator():
 
 TSLA = RSI_Calculator("TSLA", 14)
 NVDA = RSI_Calculator("NVDA", 14)
-print(TSLA)
-print(NVDA)
+AAPL = RSI_Calculator("AAPL")
+NA = RSI_Calculator("ABCD")
+
+print("Telsa RSI: " + str(TSLA))
+print("Nvidia RSI: "+ str(NVDA))
+print("Apple RSI: " + str(AAPL))
